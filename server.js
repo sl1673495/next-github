@@ -1,4 +1,5 @@
 const Koa = require('koa')
+const Router = require('koa-router')
 const next = require('next')
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -9,6 +10,7 @@ const PORT = 3001
 // 等到pages目录编译完成后启动服务响应请求
 app.prepare().then(() => {
   const server = new Koa()
+  const router = new Router()
 
   server.use(async (ctx, next) => {
     await handle(ctx.req, ctx.res)

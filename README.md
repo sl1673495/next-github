@@ -1,3 +1,5 @@
+#### 项目的初始化
+
 首先安装 create-next-app 脚手架
 
 ```
@@ -38,8 +40,25 @@ export default Home
 把 next 作为 Koa 的中间件使用。
 
 ```javascript
+const handle = app.getRequestHandler()
+const server = new Koa()
+
 server.use(async (ctx, next) => {
   await handle(ctx.req, ctx.res)
   ctx.respond = false
 })
 ```
+
+之所以要传递 ctx.req ctx.res，
+
+是因为 next 并不只是兼容 koa 这个框架
+
+所以需要传递 node 原生提供的 req 和 res
+
+#### redis 的安装(windows)
+
+在https://github.com/MicrosoftArchive/redis/releases 下载 msi 后缀的安装包
+
+安装完成后在命令行进入到安装目录 然后.\redis-server.exe .\redis.windows.conf
+
+.\redis-cli.exe 可以判断是否启动
