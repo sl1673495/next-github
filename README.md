@@ -155,7 +155,7 @@ yarn add babel-plugin-import // 按需加载插件
 
 在根目录下新建`.babelrc`文件
 
-```
+```json
 {
   "presets": ["next/babel"],
   "plugins": [
@@ -629,3 +629,133 @@ export default A
   `}
 </style>
 ```
+
+## 样式的解决方案（styled-component）
+
+首先安装依赖
+
+```
+yarn add styled-components babel-plugin-styled-components
+```
+
+然后我们在.babelrc 中加入 plugin
+
+```json
+{
+  "presets": ["next/babel"],
+  "plugins": [
+    [
+      "import",
+      {
+        "libraryName": "antd"
+      }
+    ],
+    ["styled-components", { "ssr": true }]
+  ]
+}
+```
+
+在 pages/\_document.js 里加入 jsx 的支持，这里用到了 next 给我们提供的一个覆写 app 的方法，其实就是利用高阶组件。
+
+```js
+import Document, { Html, Head, Main, NextScript } from 'next/document'
+import { ServerStyleSheet } from 'styled-components'
+
+export default class MyDocument extends Document {
+  static async getInitialProps(ctx) {
+    const sheet = new ServerStyleSheet()
+    // 劫持原本的renderPage函数并重写
+    const originalRenderPage = ctx.renderPage
+
+    try {
+      ctx.renderPage = () =>
+        originalRenderPage({
+          // 根App组件
+          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
+        })
+      // 如果重写了getInitialProps 就要把这段逻辑重新实现
+      const props = await Document.getInitialProps(ctx)
+      return {
+        ...props,
+        styles: (
+          <>
+            {props.styles}
+            {sheet.getStyleElement()}
+          </>
+        ),
+      }
+    } finally {
+      sheet.seal()
+    }
+  }
+
+  // 如果要重写render 就必须按照这个结构来写
+  render() {
+    return (
+      <Html>
+        <Head />
+        <body>
+          <Main />
+          <NextScript />
+        </body>
+      </Html>
+    )
+  }
+}
+```
+
+然后在 pages/a.js 中
+
+```js
+import styled from 'styled-components'
+
+const Title = styled.h1`
+  color: yellow;
+  font-size: 40px;
+`
+const A = ({ name }) => (
+  <>
+    <Title>这是A页面</Title>
+  </>
+)
+
+export default A
+```
+
+## next 中的 LazyLoading
+
+next 中默认帮我们开启了 LazyLoading，切换到对应路由才会去加载对应的 js 模块。
+
+LazyLoading 一般分为两类
+
+- 异步加载模块
+- 异步加载组件
+
+首先我们利用 moment 这个库演示一下异步加载模块的展示。
+
+### 异步加载模块
+我们在a页面中引入moment模块
+// pages/a.js
+
+```js
+import styled from 'styled-components'
+import moment from 'moment'
+
+const Title = styled.h1`
+  color: yellow;
+  font-size: 40px;
+`
+const A = ({ name }) => {
+  const time = moment(Date.now() - 60 * 1000).fromNow()
+  return (
+    <>
+      <Title>这是A页面, 时间差是{time}</Title>
+    </>
+  )
+}
+
+export default A
+```
+
+这会带来一个问题，如果我们在多个页面中都引入了moment，这个模块默认会被提取到打包后的公共的vendor.js里。
+
