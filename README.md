@@ -1,3 +1,20 @@
+## 前言
+
+本文参考了慕课网 jokcy 老师的[React16.8+Next.js+Koa2 开发 Github 全栈项目](https://coding.imooc.com/class/334.html)，也算是做个笔记吧。
+
+## 源码地址
+
+https://github.com/sl1673495/next-github/tree/init
+
+## 介绍
+
+Next.js 是一个轻量级的 React 服务端渲染应用框架。
+
+官网：https://nextjs.org  
+中文官网：https://nextjs.frontendx.cn
+
+当使用 React 开发系统的时候，常常需要配置很多繁琐的参数，如 Webpack 配置、Router 配置和服务器配置等。如果需要做 SEO，要考虑的事情就更多了，怎么让服务端渲染和客户端渲染保持一致是一件很麻烦的事情，需要引入很多第三方库。针对这些问题，Next.js 提供了一个很好的解决方案，使开发人员可以将精力放在业务上，从繁琐的配置中解放出来。下面我们一起来从零开始搭建一个完善的 next 项目。
+
 ## 项目的初始化
 
 首先安装 create-next-app 脚手架
@@ -34,8 +51,9 @@ npm run dev
 
 启动项目之后，默认端口启动在 3000 端口，打开 localhost:3000 后，默认访问的就是 index.js 里的内容
 
-## 把 next 作为 Koa 的中间件使用。
+## 把 next 作为 Koa 的中间件使用。（可选）
 
+如果要集成 koa 的话，可以参考这一段。  
 在根目录新建 server.js 文件
 
 ```js
@@ -79,49 +97,6 @@ scripts": {
 `ctx.req`和`ctx.res` 是 node 原生提供的
 
 之所以要传递 `ctx.req`和`ctx.res`，是因为 next 并不只是兼容 koa 这个框架，所以需要传递 node 原生提供的 `req` 和 `res`
-
-## redis 的安装
-
-### windows
-
-在 https://github.com/MicrosoftArchive/redis/releases 下载 msi 后缀的安装包
-
-安装完成后在命令行进入到安装目录 然后.\redis-server.exe .\redis.windows.conf
-
-.\redis-cli.exe 可以判断是否启动
-
-### mac
-
-`brew install redis`  
-命令 `redis-server` 可以检测是否启动成功  
-命令 `redis-cli` 可以进入 redis 操作
-
-## redis 基础操作
-
-`KEYS *` 获取所有存储的 key  
-`set a 1` 设置 key 为 a，value 为 1  
-`get a` 获取 key 为 a 的 value  
-`DEL a` 删除 key a  
-`setex c 10 1` 设置 key 为 c，value 为 1 10 秒以后过期
-
-## nodejs 连接 redis
-
-使用 `ioredis` 这个包，其性能据说比官方 redis sdk 还要高
-
-执行`yarn add ioredis`
-
-使用示例：
-
-```
-const Redis = require('ioredis')
-
-const redis = new Redis({
-  port: 6379
-  password: ''
-})
-```
-
-port 和 password 的默认值就是上面写的参数，所以如果用默认端口和密码可以不填，这个我们后面用到 redis 再说
 
 ## 集成 css
 
@@ -863,7 +838,7 @@ module.exports = withCss(configs)
 ## ssr 流程
 
 next 帮我们解决了 getInitialProps 在客户端和服务端同步的问题，
-![ssr渲染流程](https://user-images.githubusercontent.com/23615778/63155196-b0ead580-c044-11e9-82ca-625a8a48797b.png)
+![ssr渲染流程](https://user-gold-cdn.xitu.io/2019/8/19/16ca8dc70d421934?w=1290&h=1280&f=png&s=383356)
 
 next 会把服务端渲染时候得到的数据通过**NEXT_DATA**这个 key 注入到 html 页面中去。
 
@@ -1100,7 +1075,6 @@ export default Comp => {
     const reduxStore = getOrCreateStore()
     ctx.reduxStore = reduxStore
 
-    // 在这里把解析getInitialProps的步骤也做掉
     let appProps = {}
     if (typeof Comp.getInitialProps === 'function') {
       appProps = await Comp.getInitialProps(ctx)
@@ -1127,6 +1101,25 @@ import Layout from '../components/Layout'
 import initializeStore from '../store/store'
 import withRedux from '../lib/with-redux-app'
 class MyApp extends App {
+  // App组件的getInitialProps比较特殊
+  // 能拿到一些额外的参数
+  // Component: 被包裹的组件
+  static async getInitialProps(ctx) {
+    const { Component } = ctx
+    let pageProps = {}
+
+    // 拿到Component上定义的getInitialProps
+    if (Component.getInitialProps) {
+      // 执行拿到返回结果`
+      pageProps = await Component.getInitialProps(ctx)
+    }
+
+    // 返回给组件
+    return {
+      pageProps,
+    }
+  }
+
   render() {
     const { Component, pageProps, reduxStore } = this.props
     return (
@@ -1145,5 +1138,4 @@ class MyApp extends App {
 export default withRedux(MyApp)
 ```
 
-app 中之前的 getInitialProps 逻辑也可以去掉了，因为我们已经在 hoc 中把它一起做掉了。
 这样，我们就实现了在 next 中集成 redux。
