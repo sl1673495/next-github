@@ -478,7 +478,8 @@ export default class MyApp extends App {
   // App组件的getInitialProps比较特殊
   // 能拿到一些额外的参数
   // Component: 被包裹的组件
-  static async getInitialProps({ Component, router, ctx }) {
+  static async getInitialProps(ctx) {
+    const { Component } = ctx
     let pageProps = {}
 
     // 拿到Component上定义的getInitialProps
@@ -734,7 +735,8 @@ LazyLoading 一般分为两类
 首先我们利用 moment 这个库演示一下异步加载模块的展示。
 
 ### 异步加载模块
-我们在a页面中引入moment模块
+
+我们在 a 页面中引入 moment 模块
 // pages/a.js
 
 ```js
@@ -757,5 +759,391 @@ const A = ({ name }) => {
 export default A
 ```
 
-这会带来一个问题，如果我们在多个页面中都引入了moment，这个模块默认会被提取到打包后的公共的vendor.js里。
+这会带来一个问题，如果我们在多个页面中都引入了 moment，这个模块默认会被提取到打包后的公共的 vendor.js 里。
 
+我们可以利用 webpack 的动态 import 语法
+
+```js
+A.getInitialProps = async ctx => {
+  const moment = await import('moment')
+  const timeDiff = moment.default(Date.now() - 60 * 1000).fromNow()
+  return { timeDiff }
+}
+```
+
+这样只有在进入了 A 页面以后，才会下载 moment 的代码。
+
+### 异步加载组件
+
+next 官方为我们提供了一个`dynamic`方法，使用示例：
+
+```
+import dynamic from 'next/dynamic'
+
+const Comp = dynamic(import('../components/Comp'))
+
+const A = ({ name, timeDiff }) => {
+  return (
+    <>
+      <Comp />
+    </>
+  )
+}
+
+export default A
+
+```
+
+使用这种方式引入普通的 react 组件，这个组件的代码就只会在 A 页面进入后才会被下载。
+
+## next.config.js 完整配置
+
+next 回去读取根目录下的`next.config.js`文件，每一项都用注释标明了，可以根据自己的需求来使用。
+
+```js
+const withCss = require('@zeit/next-css')
+
+const configs = {
+  // 输出目录
+  distDir: 'dest',
+  // 是否每个路由生成Etag
+  generateEtags: true,
+  // 本地开发时对页面内容的缓存
+  onDemandEntries: {
+    // 内容在内存中缓存的时长(ms)
+    maxInactiveAge: 25 * 1000,
+    // 同时缓存的页面数
+    pagesBufferLength: 2,
+  },
+  // 在pages目录下会被当做页面解析的后缀
+  pageExtensions: ['jsx', 'js'],
+  // 配置buildId
+  generateBuildId: async () => {
+    if (process.env.YOUR_BUILD_ID) {
+      return process.env.YOUR_BUILD_ID
+    }
+
+    // 返回null默认的 unique id
+    return null
+  },
+  // 手动修改webpack配置
+  webpack(config, options) {
+    return config
+  },
+  // 手动修改webpackDevMiddleware配置
+  webpackDevMiddleware(config) {
+    return config
+  },
+  // 可以在页面上通过process.env.customkey 获取 value
+  env: {
+    customkey: 'value',
+  },
+  // 下面两个要通过 'next/config' 来读取
+  // 可以在页面上通过引入 import getConfig from 'next/config'来读取
+
+  // 只有在服务端渲染时才会获取的配置
+  serverRuntimeConfig: {
+    mySecret: 'secret',
+    secondSecret: process.env.SECOND_SECRET,
+  },
+  // 在服务端渲染和客户端渲染都可获取的配置
+  publicRuntimeConfig: {
+    staticFolder: '/static',
+  },
+}
+
+if (typeof require !== 'undefined') {
+  require.extensions['.css'] = file => {}
+}
+
+// withCss得到的是一个nextjs的config配置
+module.exports = withCss(configs)
+```
+
+## ssr 流程
+
+next 帮我们解决了 getInitialProps 在客户端和服务端同步的问题，
+![ssr渲染流程](https://user-images.githubusercontent.com/23615778/63155196-b0ead580-c044-11e9-82ca-625a8a48797b.png)
+
+next 会把服务端渲染时候得到的数据通过**NEXT_DATA**这个 key 注入到 html 页面中去。
+
+比如我们之前举例的 a 页面中，大概是这样的格式
+
+```js
+script id="__NEXT_DATA__" type="application/json">
+      {
+        "dataManager":"[]",
+        "props":
+          {
+            "pageProps":{"timeDiff":"a minute ago"}
+          },
+        "page":"/a",
+        "query":{},
+        "buildId":"development",
+        "dynamicBuildId":false,
+        "dynamicIds":["./components/Comp.jsx"]
+      }
+      </script>
+```
+
+## 引入 redux （客户端普通写法）
+
+`yarn add redux`
+
+在根目录下新建 store/store.js 文件
+
+// store.js
+
+```js
+import { createStore, applyMiddleware } from 'redux'
+import ReduxThunk from 'redux-thunk'
+
+const initialState = {
+  count: 0,
+}
+
+function reducer(state = initialState, action) {
+  switch (action.type) {
+    case 'add':
+      return {
+        count: state.count + 1,
+      }
+      break
+
+    default:
+      return state
+  }
+}
+
+// 这里暴露出的是创建store的工厂方法
+// 每次渲染都需要重新创建一个store实例
+// 防止服务端一直复用旧实例 无法和客户端状态同步
+export default function initializeStore() {
+  const store = createStore(reducer, initialState, applyMiddleware(ReduxThunk))
+  return store
+}
+```
+
+## 引入 react-redux
+
+`yarn add react-redux`  
+然后在\_app.js 中用这个库提供的 Provider 包裹在组件的外层 并且传入你定义的 store
+
+```js
+import { Provider } from 'react-redux'
+import initializeStore from '../store/store'
+
+...
+render() {
+    const { Component, pageProps } = this.props
+    return (
+      <Container>
+        <Layout>
+          <Provider store={initializeStore()}>
+            {/* 把pageProps解构后传递给组件 */}
+            <Component {...pageProps} />
+          </Provider>
+        </Layout>
+      </Container>
+    )
+  }
+
+```
+
+在组件内部
+
+```js
+import { connect } from 'react-redux'
+
+const Index = ({ count, add }) => {
+  return (
+    <>
+      <span>首页 state的count是{count}</span>
+      <button onClick={add}>增加</button>
+    </>
+  )
+}
+
+function mapStateToProps(state) {
+  const { count } = state
+  return {
+    count,
+  }
+}
+
+function mapDispatchToProps(dispatch) {
+  return {
+    add() {
+      dispatch({ type: 'add' })
+    },
+  }
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Index)
+```
+
+## 利用 hoc 集成 redux 和 next
+
+在上面 `引入 redux （客户端普通写法）` 介绍中，我们简单的和平常一样去引入了 store，但是这种方式在我们使用 next 做服务端渲染的时候有个很严重的问题，假如我们在 Index 组件的 getInitialProps 中这样写
+
+```js
+Index.getInitialProps = async ({ reduxStore }) => {
+  store.dispatch({ type: 'add' })
+  return {}
+}
+```
+
+进入 index 页面以后就会报一个错误
+
+```
+Text content did not match. Server: "1" Client: "0"
+```
+
+并且你每次刷新 这个 Server 后面的值都会加 1，这意味着如果多个浏览器同时访问，`store`里的`count`就会一直递增，这是很严重的 bug。
+
+这段报错的意思就是服务端的状态和客户端的状态不一致了，服务端拿到的`count`是 1，但是客户端的`count`却是 0，其实根本原因就是服务端解析了 `store.js` 文件以后拿到的 `store`和客户端拿到的 `store` 状态不一致，其实在同构项目中，服务端和客户端会持有各自不同的 `store`，并且在服务端启动了的生命周期中 `store` 是保持同一份引用的，所以我们必须想办法让两者状态统一，并且和单页应用中每次刷新以后`store`重新初始化这个行为要一致。在服务端解析过拿到 `store` 以后，直接让客户端用服务端解析的值来初始化 `store。`
+
+总结一下，我们的目标有：
+
+- 每次请求服务端的时候（页面初次进入，页面刷新），store 重新创建。
+- 前端路由跳转的时候，store 复用之前创建好的。
+- 这种判断不能写在每个组件的 getInitialProps 里，想办法抽象出来。
+
+所以我们决定利用`hoc`来实现这个逻辑复用。
+
+首先我们改造一下 store/store.js，不再直接暴露出 store 对象，而是暴露一个创建 store 的方法，并且允许传入初始状态来进行初始化。
+
+```js
+import { createStore, applyMiddleware } from 'redux'
+import ReduxThunk from 'redux-thunk'
+
+const initialState = {
+  count: 0,
+}
+
+function reducer(state = initialState, action) {
+  switch (action.type) {
+    case 'add':
+      return {
+        count: state.count + 1,
+      }
+      break
+
+    default:
+      return state
+  }
+}
+
+export default function initializeStore(state) {
+  const store = createStore(
+    reducer,
+    Object.assign({}, initialState, state),
+    applyMiddleware(ReduxThunk)
+  )
+  return store
+}
+```
+
+在 lib 目录下新建 with-redux-app.js，我们决定用这个 hoc 来包裹\_app.js 里导出的组件，每次加载 app 都要通过我们这个 hoc。
+
+```js
+import React from 'react'
+import initializeStore from '../store/store'
+
+const isServer = typeof window === 'undefined'
+const __NEXT_REDUX_STORE__ = '__NEXT_REDUX_STORE__'
+
+function getOrCreateStore(initialState) {
+  if (isServer) {
+    // 服务端每次执行都重新创建一个store
+    return initializeStore(initialState)
+  }
+  // 在客户端执行这个方法的时候 优先返回window上已有的store
+  // 而不能每次执行都重新创建一个store 否则状态就无限重置了
+  if (!window[__NEXT_REDUX_STORE__]) {
+    window[__NEXT_REDUX_STORE__] = initializeStore(initialState)
+  }
+  return window[__NEXT_REDUX_STORE__]
+}
+
+export default Comp => {
+  class withReduxApp extends React.Component {
+    constructor(props) {
+      super(props)
+      // getInitialProps创建了store 这里为什么又重新创建一次？
+      // 因为服务端执行了getInitialProps之后 返回给客户端的是序列化后的字符串
+      // redux里有很多方法 不适合序列化存储
+      // 所以选择在getInitialProps返回initialReduxState初始的状态
+      // 再在这里通过initialReduxState去创建一个完整的store
+      this.reduxStore = getOrCreateStore(props.initialReduxState)
+    }
+
+    render() {
+      const { Component, pageProps, ...rest } = this.props
+      return (
+        <Comp
+          {...rest}
+          Component={Component}
+          pageProps={pageProps}
+          reduxStore={this.reduxStore}
+        />
+      )
+    }
+  }
+
+  // 这个其实是_app.js的getInitialProps
+  // 在服务端渲染和客户端路由跳转时会被执行
+  // 所以非常适合做redux-store的初始化
+  withReduxApp.getInitialProps = async ctx => {
+    const reduxStore = getOrCreateStore()
+    ctx.reduxStore = reduxStore
+
+    // 在这里把解析getInitialProps的步骤也做掉
+    let appProps = {}
+    if (typeof Comp.getInitialProps === 'function') {
+      appProps = await Comp.getInitialProps(ctx)
+    }
+
+    return {
+      ...appProps,
+      initialReduxState: reduxStore.getState(),
+    }
+  }
+
+  return withReduxApp
+}
+```
+
+在\_app.js 中引入 hoc
+
+```js
+import App, { Container } from 'next/app'
+import 'antd/dist/antd.css'
+import React from 'react'
+import { Provider } from 'react-redux'
+import Layout from '../components/Layout'
+import initializeStore from '../store/store'
+import withRedux from '../lib/with-redux-app'
+class MyApp extends App {
+  render() {
+    const { Component, pageProps, reduxStore } = this.props
+    return (
+      <Container>
+        <Layout>
+          <Provider store={reduxStore}>
+            {/* 把pageProps解构后传递给组件 */}
+            <Component {...pageProps} />
+          </Provider>
+        </Layout>
+      </Container>
+    )
+  }
+}
+
+export default withRedux(MyApp)
+```
+
+app 中之前的 getInitialProps 逻辑也可以去掉了，因为我们已经在 hoc 中把它一起做掉了。
+这样，我们就实现了在 next 中集成 redux。

@@ -1,0 +1,1 @@
+{"version":3,"file":"0.js","sources":["webpack:///./components/Comp.jsx"],"sourcesContent":["export default ({ children }) => <span>Lazy Component</span>\n"],"mappings":";;;;;;;;;;;;;;;AAAA;AAAA;AAAA;;;;A","sourceRoot":""}

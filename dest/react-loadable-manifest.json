@@ -1,0 +1,800 @@
+{
+  "../components/Comp": [
+    {
+      "id": "./components/Comp.jsx",
+      "name": "./components/Comp.jsx",
+      "file": "static/chunks/2.js",
+      "publicPath": "static/chunks/2.js"
+    }
+  ],
+  "./dev/noop": [
+    {
+      "id": "./node_modules/next/dist/client/dev/noop.js",
+      "name": "./node_modules/next/dist/client/dev/noop.js",
+      "file": "static/chunks/0.js",
+      "publicPath": "static/chunks/0.js"
+    }
+  ],
+  "moment": [
+    {
+      "id": "./node_modules/moment/locale sync recursive ^\\.\\/.*$",
+      "name": "./node_modules/moment/locale sync recursive ^\\.\\/.*$",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/af.js",
+      "name": "./node_modules/moment/locale/af.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ar-dz.js",
+      "name": "./node_modules/moment/locale/ar-dz.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ar-kw.js",
+      "name": "./node_modules/moment/locale/ar-kw.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ar-ly.js",
+      "name": "./node_modules/moment/locale/ar-ly.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ar-ma.js",
+      "name": "./node_modules/moment/locale/ar-ma.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ar-sa.js",
+      "name": "./node_modules/moment/locale/ar-sa.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ar-tn.js",
+      "name": "./node_modules/moment/locale/ar-tn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ar.js",
+      "name": "./node_modules/moment/locale/ar.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/az.js",
+      "name": "./node_modules/moment/locale/az.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/be.js",
+      "name": "./node_modules/moment/locale/be.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/bg.js",
+      "name": "./node_modules/moment/locale/bg.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/bm.js",
+      "name": "./node_modules/moment/locale/bm.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/bn.js",
+      "name": "./node_modules/moment/locale/bn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/bo.js",
+      "name": "./node_modules/moment/locale/bo.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/br.js",
+      "name": "./node_modules/moment/locale/br.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/bs.js",
+      "name": "./node_modules/moment/locale/bs.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ca.js",
+      "name": "./node_modules/moment/locale/ca.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/cs.js",
+      "name": "./node_modules/moment/locale/cs.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/cv.js",
+      "name": "./node_modules/moment/locale/cv.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/cy.js",
+      "name": "./node_modules/moment/locale/cy.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/da.js",
+      "name": "./node_modules/moment/locale/da.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/de-at.js",
+      "name": "./node_modules/moment/locale/de-at.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/de-ch.js",
+      "name": "./node_modules/moment/locale/de-ch.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/de.js",
+      "name": "./node_modules/moment/locale/de.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/dv.js",
+      "name": "./node_modules/moment/locale/dv.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/el.js",
+      "name": "./node_modules/moment/locale/el.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/en-SG.js",
+      "name": "./node_modules/moment/locale/en-SG.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/en-au.js",
+      "name": "./node_modules/moment/locale/en-au.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/en-ca.js",
+      "name": "./node_modules/moment/locale/en-ca.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/en-gb.js",
+      "name": "./node_modules/moment/locale/en-gb.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/en-ie.js",
+      "name": "./node_modules/moment/locale/en-ie.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/en-il.js",
+      "name": "./node_modules/moment/locale/en-il.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/en-nz.js",
+      "name": "./node_modules/moment/locale/en-nz.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/eo.js",
+      "name": "./node_modules/moment/locale/eo.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/es-do.js",
+      "name": "./node_modules/moment/locale/es-do.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/es-us.js",
+      "name": "./node_modules/moment/locale/es-us.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/es.js",
+      "name": "./node_modules/moment/locale/es.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/et.js",
+      "name": "./node_modules/moment/locale/et.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/eu.js",
+      "name": "./node_modules/moment/locale/eu.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/fa.js",
+      "name": "./node_modules/moment/locale/fa.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/fi.js",
+      "name": "./node_modules/moment/locale/fi.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/fo.js",
+      "name": "./node_modules/moment/locale/fo.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/fr-ca.js",
+      "name": "./node_modules/moment/locale/fr-ca.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/fr-ch.js",
+      "name": "./node_modules/moment/locale/fr-ch.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/fr.js",
+      "name": "./node_modules/moment/locale/fr.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/fy.js",
+      "name": "./node_modules/moment/locale/fy.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ga.js",
+      "name": "./node_modules/moment/locale/ga.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/gd.js",
+      "name": "./node_modules/moment/locale/gd.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/gl.js",
+      "name": "./node_modules/moment/locale/gl.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/gom-latn.js",
+      "name": "./node_modules/moment/locale/gom-latn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/gu.js",
+      "name": "./node_modules/moment/locale/gu.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/he.js",
+      "name": "./node_modules/moment/locale/he.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/hi.js",
+      "name": "./node_modules/moment/locale/hi.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/hr.js",
+      "name": "./node_modules/moment/locale/hr.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/hu.js",
+      "name": "./node_modules/moment/locale/hu.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/hy-am.js",
+      "name": "./node_modules/moment/locale/hy-am.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/id.js",
+      "name": "./node_modules/moment/locale/id.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/is.js",
+      "name": "./node_modules/moment/locale/is.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/it-ch.js",
+      "name": "./node_modules/moment/locale/it-ch.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/it.js",
+      "name": "./node_modules/moment/locale/it.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ja.js",
+      "name": "./node_modules/moment/locale/ja.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/jv.js",
+      "name": "./node_modules/moment/locale/jv.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ka.js",
+      "name": "./node_modules/moment/locale/ka.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/kk.js",
+      "name": "./node_modules/moment/locale/kk.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/km.js",
+      "name": "./node_modules/moment/locale/km.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/kn.js",
+      "name": "./node_modules/moment/locale/kn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ko.js",
+      "name": "./node_modules/moment/locale/ko.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ku.js",
+      "name": "./node_modules/moment/locale/ku.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ky.js",
+      "name": "./node_modules/moment/locale/ky.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/lb.js",
+      "name": "./node_modules/moment/locale/lb.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/lo.js",
+      "name": "./node_modules/moment/locale/lo.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/lt.js",
+      "name": "./node_modules/moment/locale/lt.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/lv.js",
+      "name": "./node_modules/moment/locale/lv.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/me.js",
+      "name": "./node_modules/moment/locale/me.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/mi.js",
+      "name": "./node_modules/moment/locale/mi.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/mk.js",
+      "name": "./node_modules/moment/locale/mk.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ml.js",
+      "name": "./node_modules/moment/locale/ml.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/mn.js",
+      "name": "./node_modules/moment/locale/mn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/mr.js",
+      "name": "./node_modules/moment/locale/mr.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ms-my.js",
+      "name": "./node_modules/moment/locale/ms-my.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ms.js",
+      "name": "./node_modules/moment/locale/ms.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/mt.js",
+      "name": "./node_modules/moment/locale/mt.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/my.js",
+      "name": "./node_modules/moment/locale/my.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/nb.js",
+      "name": "./node_modules/moment/locale/nb.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ne.js",
+      "name": "./node_modules/moment/locale/ne.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/nl-be.js",
+      "name": "./node_modules/moment/locale/nl-be.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/nl.js",
+      "name": "./node_modules/moment/locale/nl.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/nn.js",
+      "name": "./node_modules/moment/locale/nn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/pa-in.js",
+      "name": "./node_modules/moment/locale/pa-in.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/pl.js",
+      "name": "./node_modules/moment/locale/pl.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/pt-br.js",
+      "name": "./node_modules/moment/locale/pt-br.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/pt.js",
+      "name": "./node_modules/moment/locale/pt.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ro.js",
+      "name": "./node_modules/moment/locale/ro.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ru.js",
+      "name": "./node_modules/moment/locale/ru.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/sd.js",
+      "name": "./node_modules/moment/locale/sd.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/se.js",
+      "name": "./node_modules/moment/locale/se.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/si.js",
+      "name": "./node_modules/moment/locale/si.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/sk.js",
+      "name": "./node_modules/moment/locale/sk.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/sl.js",
+      "name": "./node_modules/moment/locale/sl.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/sq.js",
+      "name": "./node_modules/moment/locale/sq.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/sr-cyrl.js",
+      "name": "./node_modules/moment/locale/sr-cyrl.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/sr.js",
+      "name": "./node_modules/moment/locale/sr.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ss.js",
+      "name": "./node_modules/moment/locale/ss.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/sv.js",
+      "name": "./node_modules/moment/locale/sv.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/sw.js",
+      "name": "./node_modules/moment/locale/sw.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ta.js",
+      "name": "./node_modules/moment/locale/ta.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/te.js",
+      "name": "./node_modules/moment/locale/te.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/tet.js",
+      "name": "./node_modules/moment/locale/tet.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/tg.js",
+      "name": "./node_modules/moment/locale/tg.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/th.js",
+      "name": "./node_modules/moment/locale/th.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/tl-ph.js",
+      "name": "./node_modules/moment/locale/tl-ph.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/tlh.js",
+      "name": "./node_modules/moment/locale/tlh.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/tr.js",
+      "name": "./node_modules/moment/locale/tr.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/tzl.js",
+      "name": "./node_modules/moment/locale/tzl.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/tzm-latn.js",
+      "name": "./node_modules/moment/locale/tzm-latn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/tzm.js",
+      "name": "./node_modules/moment/locale/tzm.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ug-cn.js",
+      "name": "./node_modules/moment/locale/ug-cn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/uk.js",
+      "name": "./node_modules/moment/locale/uk.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/ur.js",
+      "name": "./node_modules/moment/locale/ur.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/uz-latn.js",
+      "name": "./node_modules/moment/locale/uz-latn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/uz.js",
+      "name": "./node_modules/moment/locale/uz.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/vi.js",
+      "name": "./node_modules/moment/locale/vi.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/x-pseudo.js",
+      "name": "./node_modules/moment/locale/x-pseudo.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/yo.js",
+      "name": "./node_modules/moment/locale/yo.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/zh-cn.js",
+      "name": "./node_modules/moment/locale/zh-cn.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/zh-hk.js",
+      "name": "./node_modules/moment/locale/zh-hk.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/locale/zh-tw.js",
+      "name": "./node_modules/moment/locale/zh-tw.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/moment/moment.js",
+      "name": "./node_modules/moment/moment.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    },
+    {
+      "id": "./node_modules/webpack/buildin/module.js",
+      "name": "./node_modules/webpack/buildin/module.js",
+      "file": "static/chunks/1.js",
+      "publicPath": "static/chunks/1.js"
+    }
+  ]
+}

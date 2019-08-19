@@ -1,4 +1,8 @@
 import styled from 'styled-components'
+import getConfig from 'next/config'
+import dynamic from 'next/dynamic'
+
+const Comp = dynamic(import('../components/Comp'))
 
 const Title = styled.h1`
   color: yellow;
@@ -8,14 +12,15 @@ const A = ({ name, timeDiff }) => {
   return (
     <>
       <Title>这是A页面, 时间差是{timeDiff}</Title>
+      动态组件：
+      <Comp />
     </>
   )
 }
 
 A.getInitialProps = async ctx => {
-  const { default: moment } = await import('moment')
-  console.log('moment: ', moment)
-  const timeDiff = moment(Date.now() - 60 * 1000).fromNow()
+  const moment = await import('moment')
+  const timeDiff = moment.default(Date.now() - 60 * 1000).fromNow()
   return { timeDiff }
 }
 
