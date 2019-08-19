@@ -230,8 +230,8 @@ export default () => {
     Router.push({
       pathname: '/b',
       query: {
-        id: 2,
-      },
+        id: 2
+      }
     })
   }
 
@@ -265,8 +265,8 @@ Router.push(
   {
     pathname: '/b',
     query: {
-      id: 2,
-    },
+      id: 2
+    }
   },
   '/b/2'
 )
@@ -303,8 +303,8 @@ app.prepare().then(() => {
     await handle(ctx.req, ctx.res, {
       pathname: '/a',
       query: {
-        id,
-      },
+        id
+      }
     })
     ctx.respond = false
   })
@@ -414,7 +414,7 @@ const A = ({ name }) => (
 
 A.getInitialProps = () => {
   return {
-    name: 'ssh',
+    name: 'ssh'
   }
 }
 export default A
@@ -465,7 +465,7 @@ export default class MyApp extends App {
 
     // 返回给组件
     return {
-      pageProps,
+      pageProps
     }
   }
 
@@ -647,7 +647,7 @@ export default class MyDocument extends Document {
       ctx.renderPage = () =>
         originalRenderPage({
           // 根App组件
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
+          enhanceApp: App => props => sheet.collectStyles(<App {...props} />)
         })
       // 如果重写了getInitialProps 就要把这段逻辑重新实现
       const props = await Document.getInitialProps(ctx)
@@ -658,7 +658,7 @@ export default class MyDocument extends Document {
             {props.styles}
             {sheet.getStyleElement()}
           </>
-        ),
+        )
       }
     } finally {
       sheet.seal()
@@ -788,7 +788,7 @@ const configs = {
     // 内容在内存中缓存的时长(ms)
     maxInactiveAge: 25 * 1000,
     // 同时缓存的页面数
-    pagesBufferLength: 2,
+    pagesBufferLength: 2
   },
   // 在pages目录下会被当做页面解析的后缀
   pageExtensions: ['jsx', 'js'],
@@ -811,7 +811,7 @@ const configs = {
   },
   // 可以在页面上通过process.env.customkey 获取 value
   env: {
-    customkey: 'value',
+    customkey: 'value'
   },
   // 下面两个要通过 'next/config' 来读取
   // 可以在页面上通过引入 import getConfig from 'next/config'来读取
@@ -819,12 +819,12 @@ const configs = {
   // 只有在服务端渲染时才会获取的配置
   serverRuntimeConfig: {
     mySecret: 'secret',
-    secondSecret: process.env.SECOND_SECRET,
+    secondSecret: process.env.SECOND_SECRET
   },
   // 在服务端渲染和客户端渲染都可获取的配置
   publicRuntimeConfig: {
-    staticFolder: '/static',
-  },
+    staticFolder: '/static'
+  }
 }
 
 if (typeof require !== 'undefined') {
@@ -874,14 +874,14 @@ import { createStore, applyMiddleware } from 'redux'
 import ReduxThunk from 'redux-thunk'
 
 const initialState = {
-  count: 0,
+  count: 0
 }
 
 function reducer(state = initialState, action) {
   switch (action.type) {
     case 'add':
       return {
-        count: state.count + 1,
+        count: state.count + 1
       }
       break
 
@@ -942,7 +942,7 @@ const Index = ({ count, add }) => {
 function mapStateToProps(state) {
   const { count } = state
   return {
-    count,
+    count
   }
 }
 
@@ -950,7 +950,7 @@ function mapDispatchToProps(dispatch) {
   return {
     add() {
       dispatch({ type: 'add' })
-    },
+    }
   }
 }
 export default connect(
@@ -995,14 +995,14 @@ import { createStore, applyMiddleware } from 'redux'
 import ReduxThunk from 'redux-thunk'
 
 const initialState = {
-  count: 0,
+  count: 0
 }
 
 function reducer(state = initialState, action) {
   switch (action.type) {
     case 'add':
       return {
-        count: state.count + 1,
+        count: state.count + 1
       }
       break
 
@@ -1082,7 +1082,7 @@ export default Comp => {
 
     return {
       ...appProps,
-      initialReduxState: reduxStore.getState(),
+      initialReduxState: reduxStore.getState()
     }
   }
 
@@ -1116,7 +1116,7 @@ class MyApp extends App {
 
     // 返回给组件
     return {
-      pageProps,
+      pageProps
     }
   }
 
@@ -1139,3 +1139,59 @@ export default withRedux(MyApp)
 ```
 
 这样，我们就实现了在 next 中集成 redux。
+
+## github Oauth 认证
+
+接下来接入 github 第三方登录
+
+### 新建 github applications
+
+首先进入 github 的新建 app 页面
+https://github.com/settings/applications/new
+
+这里的 Homepage URL 可以暂时填写本地开发的 url
+然后 Authorization callback URL 先填写本地开发的 url + /auth (如 localhost:3001/auth)
+
+新建成功后，进入的页面就可以看到`Client ID`和
+`Client Secret`
+
+在项目根目录下新建 config.js
+
+```js
+module.exports = {
+  github: {
+    client_id: '你的client_id',
+    client_secret: '你的client_secret'
+  }
+}
+```
+
+可以在
+https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
+查看 Oauth 认证的说明。
+
+### Oauth 字段详解
+
+#### 跳转字段
+
+`client_id`: application 的 id  
+`redirect_uri`: 注册时填写的 Authorization callback URL  
+`scope`: 允许访问的权限
+`allow_signup`: 是否允许用户注册
+
+可以通过在浏览器中访问
+`https://github.com/login/oauth/authorize?client_id=你的client_id` 加上上述字段来尝试。
+
+#### 请求 token
+
+`client_id`：同上  
+`client_secret`: 注册后获得的 Client Secret  
+`code`：用户同意认证后，跳转到填写的 Authorization callback URL 后，参数中可以获得这个 code。
+
+### Oauth Code 保证安全的策略
+
+- 一次性 code，利用 code 请求过一次 token 后，这个 code 就会失效。
+- id + secret 认证
+- redirect_uri 如果和 github 配置里填写的不同，会直接报错。
+
+作为接入方，只要我们保证 secret 不被泄露，redirect_uri 填写正确，就可以保证用户账户的安全。
