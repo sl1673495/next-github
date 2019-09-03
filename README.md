@@ -1170,14 +1170,14 @@ module.exports = {
 https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
 查看 Oauth 认证的说明。
 
-### Oauth 字段详解
+### Oauth 请求
 
 #### 跳转字段
 
 `client_id`: application 的 id  
 `redirect_uri`: 注册时填写的 Authorization callback URL  
-`scope`: 允许访问的权限
-`allow_signup`: 是否允许用户注册
+`scope`: 允许访问的权限  
+`allow_signup`: 是否允许用户注册  
 
 可以通过在浏览器中访问
 `https://github.com/login/oauth/authorize?client_id=你的client_id` 加上上述字段来尝试。
@@ -1186,7 +1186,12 @@ https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
 
 `client_id`：同上  
 `client_secret`: 注册后获得的 Client Secret  
-`code`：用户同意认证后，跳转到填写的 Authorization callback URL 后，参数中可以获得这个 code。
+`code`：用户同意认证后，跳转到填写的 Authorization callback URL 后，参数中可以获得这个 code， **这个code只能使用一次。**  
+接口地址(post)： `https://github.com/login/oauth/access_token`
+
+#### 获取用户信息
+`https://api.github.com/user` 需要在header中添加Authorization字段，值为`token 请求到的token`。
+  
 
 ### Oauth Code 保证安全的策略
 
@@ -1195,3 +1200,285 @@ https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/
 - redirect_uri 如果和 github 配置里填写的不同，会直接报错。
 
 作为接入方，只要我们保证 secret 不被泄露，redirect_uri 填写正确，就可以保证用户账户的安全。
+
+## cookie和session
+用`koa-session`这个库来处理session,
+```
+yarn add koa-seassion
+```
+
+### 基础使用
+server.js
+```js
+const Koa = require('koa')
+const Router = require('koa-router')
+const next = require('next')
+const session = require('koa-session')
+
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+
+const PORT = 3001
+
+// 等到pages目录编译完成后启动服务响应请求
+app.prepare().then(() => {
+  const server = new Koa()
+  const router = new Router()
+
+    // 用于给session加密
+  server.keys = ['ssh develop github app']
+  const sessionConfig = {
+    // 设置到浏览器的cookie里的key
+    key: 'sid',
+  }
+  server.use(session(sessionConfig, server))
+
+  server.use(async (ctx, next) => {
+      console.log(`session is ${JSON.stringify(ctx.session)}`)
+      next()
+  })
+
+  router.get('/set/user', async (ctx) => {
+    ctx.session.user = {
+      name: 'ssh',
+      age: 18
+    }
+    ctx.body = 'set session successd'
+  })
+
+  server.use(router.routes())
+
+  server.use(async (ctx, next) => {
+    await handle(ctx.req, ctx.res)
+    ctx.respond = false
+  })
+
+  server.listen(PORT, () => {
+    console.log(`koa server listening on ${PORT}`)
+  })
+})
+```
+这时候访问/set/user，就可以在node端控制台打印出session了。  
+
+koa-session做了类似于这样的事情，利用cookie来存储session id，这样就能在下一次访问接口找到对应的session信息。
+```js
+server.use((ctx, next) => {
+  if (ctx.cookies.get('sid')) {
+    ctx.session = {}
+  }
+
+  // 先等待后面的中间件处理
+  await next()
+
+  ctx.cookies.set(xxxx)
+})
+```
+
+### 利用redis存储信息
+
+因为`koa-session`这个库允许我们自定义一个store用来存取session，所以我们要新建一个session存储的类，提供`get`、`set`、`destory`方法即可。
+新建server文件夹，新建server/session-store.js文件
+```js
+// 加上前缀
+function getRedisSessionId(sessionId) {
+  return `ssid:${sessionId}`
+}
+
+export default class RedisSessionStore {
+  constructor(client) {
+    // node.js的redis-client
+    this.client = client
+  }
+
+  // 获取redis中存储的session数据
+  async get(sessionId) {
+    console.log('get sessionId: ', sessionId);
+    const id = getRedisSessionId(sessionId)
+    // 对应命令行操作redis的get指令，获取value
+    const data = await this.client.get(id)
+    if (!data) {
+      return null
+    }
+    try {
+      const result = JSON.parse(data)
+      return result
+    } catch (err) {
+      console.error(err)
+    }
+  }
+
+  // 在redis中存储session数据
+  async set(sessionId, session, ttl /** 过期时间 */) {
+    console.log('set sessionId: ', sessionId);
+    const id = getRedisSessionId(sessionId)
+    let ttlSecond
+    if (typeof ttl === 'number') {
+      // 毫秒转秒
+      ttlSecond = Math.ceil(ttl / 1000)
+    }
+
+    try {
+      const sessionStr = JSON.stringify(session)
+      // 根据是否有过期时间 调用不同的api
+      if (ttl) {
+        // set with expire
+        await this.client.setex(id, ttlSecond, sessionStr)
+      } else {
+        await this.client.set(id, sessionStr)
+      }
+    } catch (error) {
+      console.error('error: ', error);
+    }
+  }
+
+  // 从resid中删除某个session
+  // 在koa中 设置ctx.session = null时，会调用这个方法
+  async destroy(sessionId) {
+    console.log('destroy sessionId: ', sessionId);
+    const id = getRedisSessionId(sessionId)
+    await this.client.del(id)
+  }
+}
+
+```
+
+这样就实现了一个精简版的session store， 然后在server.js中引入自定义store，并且利用`ioredis`这个库实例化一个node可用的redis client传入给自定义store
+```js
+const Koa = require('koa')
+const Router = require('koa-router')
+const next = require('next')
+const session = require('koa-session')
+const Redis = require('ioredis')
+const RedisSessionStore = require('./server/session-store')
+
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+// 实例化一个redisClient
+const redisClient = new Redis()
+const PORT = 3001
+// 等到pages目录编译完成后启动服务响应请求
+app.prepare().then(() => {
+  const server = new Koa()
+  const router = new Router()
+
+  // 用于给session加密
+  server.keys = ['ssh develop github app']
+  const sessionConfig = {
+    // 设置到浏览器的cookie里的key
+    key: 'sid',
+    // 将自定义存储逻辑传给koa-session
+    store: new RedisSessionStore(redisClient),
+  }
+  server.use(session(sessionConfig, server))
+
+  router.get('/a/:id', async (ctx) => {
+    const { id } = ctx.params
+    await handle(ctx.req, ctx.res, {
+      pathname: '/a',
+      query: {
+        id,
+      },
+    })
+    ctx.respond = false
+  })
+
+  router.get('/set/user', async (ctx) => {
+    // 如果session里没有用户信息
+    ctx.session.user = {
+      name: 'ssh',
+      age: 18,
+    }
+    ctx.body = 'set session successd'
+  })
+
+  server.use(router.routes())
+
+  server.use(async (ctx, next) => {
+    await handle(ctx.req, ctx.res)
+    ctx.respond = false
+  })
+
+  server.listen(PORT, () => {
+    console.log(`koa server listening on ${PORT}`)
+  })
+})
+
+```
+
+重启服务后 访问`/set/user`接口，然后在命令行里输入`redis-client`，通过`keys *` 就可以看到我们自定义的ssid开头的session id了。通过`get ssid:xxx` 就可以看到我们在代码中存入的用户信息。
+
+## Github Oauth接入
+在页面中某个入口引入a标签，href指向`https://github.com/login/oauth/authorize?client_id=你的client_id`，登陆成功后，github会帮你回跳到你填写的callback地址，并且在query参数中带上`code`这个字段，现在来编写获取到code以后的流程。  
+
+首先引入axios作为请求库
+`yarn add axios`
+
+把请求token的url放在config.js中
+```js
+module.exports = {
+  github: {
+    request_token_url: 'https://github.com/login/oauth/access_token',
+    // ...省略
+  },
+}
+```
+新建`server/auth.js`
+```js
+// 处理github返回的auth code
+const axios = require('axios')
+const config = require('../config')
+
+const { client_id, client_secret, request_token_url } = config.github
+
+module.exports = (server) => {
+  server.use(async (ctx, next) => {
+    if (ctx.path === '/auth') {
+      const { code } = ctx.query
+      if (code) {
+        // 获取Oauth鉴权信息
+        const result = await axios({
+          method: 'POST',
+          url: request_token_url,
+          data: {
+            client_id,
+            client_secret,
+            code,
+          },
+          headers: {
+            Accept: 'application/json',
+          },
+        })
+
+        // github 可能会在status是200的情况下返回error信息
+        if (result.status === 200 && (result.data && !result.data.error)) {
+          ctx.session.githubAuth = result.data
+        
+          const { access_token, token_type } = result.data
+          // 获取用户信息
+          const { data: userInfo } = await axios({
+            method: 'GET',
+            url: 'https://api.github.com/user',
+            headers: {
+              Authorization: `${token_type} ${access_token}`,
+            },
+          })
+
+          ctx.session.userInfo = userInfo
+          // 重定向到首页
+          ctx.redirect('/')
+        } else {
+          ctx.body = `request token failed ${result.data && result.data.error}`
+        }
+      } else {
+        ctx.body = 'code not exist'
+      }
+    } else {
+      await next()
+    }
+  })
+}
+```
+
+这一整套流程下来，我们就获取到token和userInfo，并且都保存在session里了

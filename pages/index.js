@@ -1,13 +1,17 @@
 import { connect } from 'react-redux'
+import getConfig from 'next/config'
 
-const Index = ({ count, add }) => {
-  return (
-    <>
-      <span>首页 state的count是{count}</span>
-      <button onClick={add}>增加</button>
-    </>
-  )
-}
+const { publicRuntimeConfig } = getConfig()
+const Index = ({ count, add }) => (
+  <>
+    <span>
+      首页 state的count是
+      {count}
+    </span>
+    <button onClick={add}>增加</button>
+    <a href={publicRuntimeConfig.OAUTH_URL}>去登陆</a>
+  </>
+)
 
 Index.getInitialProps = async ({ reduxStore }) => {
   console.log('reduxStore: ', reduxStore)
@@ -31,5 +35,5 @@ function mapDispatchToProps(dispatch) {
 }
 export default connect(
   mapStateToProps,
-  mapDispatchToProps
+  mapDispatchToProps,
 )(Index)
