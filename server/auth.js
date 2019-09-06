@@ -38,14 +38,38 @@ module.exports = (server) => {
           })
 
           ctx.session.userInfo = userInfo
-          // 重定向到首页
-          ctx.redirect('/')
+          // 重定向到登录前的页面或首页
+          ctx.redirect((ctx.session && ctx.session.urlBeforeOAuth) || '/')
+          ctx.session.urlBeforeOAuth = ''
         } else {
           ctx.body = `request token failed ${result.data && result.data.error}`
         }
       } else {
         ctx.body = 'code not exist'
       }
+    } else {
+      await next()
+    }
+  })
+
+  // 登出逻辑
+  server.use(async (ctx, next) => {
+    const { path, method } = ctx
+    if (path === '/logout' && method === 'POST') {
+      ctx.session = null
+      ctx.body = 'logout success'
+    } else {
+      await next()
+    }
+  })
+
+  // 在进行auth之前 记录请求时的页面url
+  server.use(async (ctx, next) => {
+    const { path, method } = ctx
+    if (path === '/prepare-auth' && method === 'GET') {
+      const { url } = ctx.query
+      ctx.session.urlBeforeOAuth = url
+      ctx.redirect(config.OAUTH_URL)
     } else {
       await next()
     }

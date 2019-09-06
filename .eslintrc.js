@@ -32,6 +32,8 @@ module.exports = {
    "react/button-has-type": [0],
    "react/prop-types": [0],
    "no-console": [0],
-   "camelcase": [0]
+   "camelcase": [0],
+   "react/jsx-one-expression-per-line": [0],
+   "no-nested-ternary": [0]
   },
 };

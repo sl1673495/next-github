@@ -842,6 +842,12 @@ next 帮我们解决了 getInitialProps 在客户端和服务端同步的问题�
 
 next 会把服务端渲染时候得到的数据通过**NEXT_DATA**这个 key 注入到 html 页面中去。
 
+>Next.js 在做服务器端渲染的时候，页面对应的 React 组件的 getInitialProps 函数被调用，异步结果就是“脱水”数据的重要部分，除了传给页面 React 组件完成渲染，还放在内嵌 script 的 __NEXT_DATA__ 中，这样，在浏览器端渲染的时候，是不会去调用 getInitialProps 的，直接通过 __NEXT_DATA__ 中的“脱水”数据来启动页面 React 组件的渲染。
+这样一来，如果 getInitialProps 中有调用 API 的异步操作，只在服务器端做一次，浏览器端就不用做了。
+那么，getInitialProps 什么时候会在浏览器端调用呢？
+当在单页应用中做页面切换的时候，比如从 Home 页切换到 Product 页，这时候完全和服务器端没关系，只能靠浏览器端自己了，Product页面的 getInitialProps 函数就会在浏览器端被调用，得到的数据用来开启页面的 React 原生生命周期过程。 
+参考来源：https://blog.csdn.net/gwdgwd123/article/details/85030708
+
 比如我们之前举例的 a 页面中，大概是这样的格式
 
 ```js
@@ -1482,3 +1488,82 @@ module.exports = (server) => {
 ```
 
 这一整套流程下来，我们就获取到token和userInfo，并且都保存在session里了
+
+然后在server.js里引入
+```js
+const Koa = require('koa')
+const Router = require('koa-router')
+const next = require('next')
+const session = require('koa-session')
+const Redis = require('ioredis')
+const koaBody = require('koa-body')
+const auth = require('./server/auth')
+const api = require('./server/api')
+const RedisSessionStore = require('./server/session-store')
+
+const dev = process.env.NODE_ENV !== 'production'
+const app = next({ dev })
+const handle = app.getRequestHandler()
+// 实例化一个redisClient
+const redisClient = new Redis()
+const PORT = 3001
+// 等到pages目录编译完成后启动服务响应请求
+app.prepare().then(() => {
+  const server = new Koa()
+  const router = new Router()
+
+  // 用于给session加密
+  server.keys = ['ssh develop github app']
+  // 解析post请求的内容
+  server.use(koaBody())
+
+  const sessionConfig = {
+    // 设置到浏览器的cookie里的key
+    key: 'sid',
+    // 将自定义存储逻辑传给koa-session
+    store: new RedisSessionStore(redisClient),
+  }
+  server.use(session(sessionConfig, server))
+
+  // 处理github Oauth登录
+  auth(server)
+  // 处理github请求代理
+  api(server)
+
+  router.get('/a/:id', async (ctx) => {
+    const { id } = ctx.params
+    await handle(ctx.req, ctx.res, {
+      pathname: '/a',
+      query: {
+        id,
+      },
+    })
+    ctx.respond = false
+  })
+
+  router.get('/api/user/info', async (ctx) => {
+    const { userInfo } = ctx.session
+    if (userInfo) {
+      ctx.body = userInfo
+      // 设置头部 返回json
+      ctx.set('Content-Type', 'application/json')
+    } else {
+      ctx.status = 401
+      ctx.body = 'Need Login'
+    }
+  })
+
+  server.use(router.routes())
+
+  server.use(async (ctx) => {
+    // req里获取session
+    ctx.req.session = ctx.session
+    await handle(ctx.req, ctx.res)
+    ctx.respond = false
+  })
+
+  server.listen(PORT, () => {
+    console.log(`koa server listening on ${PORT}`)
+  })
+})
+```

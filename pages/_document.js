@@ -1,4 +1,6 @@
-import Document, { Html, Head, Main, NextScript } from 'next/document'
+import Document, {
+  Html, Head, Main, NextScript,
+} from 'next/document'
 import { ServerStyleSheet } from 'styled-components'
 
 export default class MyDocument extends Document {
@@ -8,11 +10,10 @@ export default class MyDocument extends Document {
     const originalRenderPage = ctx.renderPage
 
     try {
-      ctx.renderPage = () =>
-        originalRenderPage({
-          // 根App组件
-          enhanceApp: App => props => sheet.collectStyles(<App {...props} />),
-        })
+      ctx.renderPage = () => originalRenderPage({
+        // 根App组件
+        enhanceApp: (App) => (props) => sheet.collectStyles(<App {...props} />),
+      })
       // 如果重写了getInitialProps 就要把这段逻辑重新实现
       const props = await Document.getInitialProps(ctx)
       return {
@@ -36,7 +37,7 @@ export default class MyDocument extends Document {
         <Head />
         <body>
           <Main />
-          <NextScript />
+          <NextScript />
         </body>
       </Html>
     )

@@ -3,7 +3,9 @@ const Router = require('koa-router')
 const next = require('next')
 const session = require('koa-session')
 const Redis = require('ioredis')
+const koaBody = require('koa-body')
 const auth = require('./server/auth')
+const api = require('./server/api')
 const RedisSessionStore = require('./server/session-store')
 
 const dev = process.env.NODE_ENV !== 'production'
@@ -19,6 +21,9 @@ app.prepare().then(() => {
 
   // 用于给session加密
   server.keys = ['ssh develop github app']
+  // 解析post请求的内容
+  server.use(koaBody())
+
   const sessionConfig = {
     // 设置到浏览器的cookie里的key
     key: 'sid',
@@ -29,6 +34,8 @@ app.prepare().then(() => {
 
   // 处理github Oauth登录
   auth(server)
+  // 处理github请求代理
+  api(server)
 
   router.get('/a/:id', async (ctx) => {
     const { id } = ctx.params
@@ -56,6 +63,8 @@ app.prepare().then(() => {
   server.use(router.routes())
 
   server.use(async (ctx) => {
+    // req里获取session
+    ctx.req.session = ctx.session
     await handle(ctx.req, ctx.res)
     ctx.respond = false
   })
