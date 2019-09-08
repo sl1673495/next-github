@@ -29,18 +29,18 @@ class MyApp extends App {
 
   state = {
     context: 'value',
-    loading: false
+    loading: false,
   }
 
   startLoading = () => {
     this.setState({
-      loading: true
+      loading: true,
     })
   }
 
   stopLoading = () => {
     this.setState({
-      loading: false
+      loading: false,
     })
   }
 
@@ -62,7 +62,7 @@ class MyApp extends App {
       <Container>
         <Provider store={reduxStore}>
           <Layout>
-            {this.state.loading &&  <PageLoading />}
+            {this.state.loading && <PageLoading />}
             {/* 把pageProps解构后传递给组件 */}
             <Component {...pageProps} />
           </Layout>

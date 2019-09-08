@@ -1,17 +1,14 @@
 import {
   Layout, Icon, Input, Avatar, Button, Tooltip, Dropdown, Menu,
 } from 'antd'
-import { withRouter, Router } from 'next/router'
-import getConfig from 'next/config'
+import { withRouter } from 'next/router'
 import Link from 'next/link'
 import { useState } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import axios from 'axios'
 import CenterContainer from './CenterContainer'
 import { logout } from '../store/store'
 
 const { Header, Content, Footer } = Layout
-const { publicRuntimeConfig } = getConfig()
 
 const AppLayout = ({ children, router }) => {
   const { query: { query = '' } = {} } = router
@@ -47,7 +44,9 @@ const AppLayout = ({ children, router }) => {
             <div className="header-left">
               <div className="logo">
                 <Link href="/">
-                  <Icon type="github" className="icon-github" />
+                  <a>
+                    <Icon type="github" className="icon-github" />
+                  </a>
                 </Link>
               </div>
               <div>

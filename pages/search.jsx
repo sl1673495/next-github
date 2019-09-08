@@ -6,7 +6,16 @@ import {
 import Link from 'next/link'
 import classNames from 'classnames'
 import Repo from '../components/Repo'
+import initCache from '../lib/client-cache'
+import { genCacheKeyByQuery } from '../lib/util'
 import { request } from '../lib/api'
+
+const { cache, useCache } = initCache({
+  genCacheKeyStrate: (context) => {
+    return genCacheKeyByQuery(context.ctx.query)
+  },
+})
+
 /**
   * 关心的search条件
   * sort: 排序方式
@@ -74,9 +83,12 @@ const FilterLink = memo(({
 })
 
 const Search = ({ router, repos }) => {
+  const { query } = router
   const {
     sort, order, lang, page = 1,
-  } = router.query
+  } = query
+
+  useCache(genCacheKeyByQuery(query), { repos })
 
   return (
     <div className="root">
@@ -148,7 +160,8 @@ const Search = ({ router, repos }) => {
             <Pagination
               pageSize={PER_PAGE}
               current={Number(page)}
-              total={repos.total_count}
+              // github api限制请求前1000条
+              total={Math.min(repos.total_count, 1000)}
               onChange={() => {}}
               itemRender={(renderPage, renderType, renderOl) => {
                 const targetPage = renderType === 'page'
@@ -196,7 +209,7 @@ const Search = ({ router, repos }) => {
   )
 }
 
-Search.getInitialProps = async ({ ctx }) => {
+Search.getInitialProps = cache(async ({ ctx }) => {
   const {
     query, sort, lang, order = 'desc', page,
   } = ctx.query
@@ -232,6 +245,6 @@ Search.getInitialProps = async ({ ctx }) => {
   return {
     repos: result.data,
   }
-}
+})
 
 export default withRouter(Search)

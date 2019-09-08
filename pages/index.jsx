@@ -14,7 +14,7 @@ const Index = ({ userRepos, starred, router }) => {
   const user = useSelector((store) => store.user)
   const tabKey = router.query.key || '1'
 
-  useCache({
+  useCache('cache', {
     userRepos,
     starred,
   })
