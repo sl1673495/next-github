@@ -1633,7 +1633,7 @@ export default function initClientCache({ lruConfig = {}, genCacheKeyStrate } = 
 ```
 
 使用示例：
-```
+```js
 /**
 *  使用示例
 *  关键点在于cache和useCache的使用
