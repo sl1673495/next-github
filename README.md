@@ -1567,3 +1567,138 @@ app.prepare().then(() => {
   })
 })
 ```
+
+jokcy老师在项目中用的LRU缓存策略，我封装成了更共用的一个工具，可以对所有页面的getInitialProps进行包裹。  
+
+lib/utils/client-cache.js
+```js
+import { useEffect } from 'react'
+import LRU from 'lru-cache'
+
+const isServer = typeof window === 'undefined'
+const DEFAULT_CACHE_KEY = 'cache'
+export default function initClientCache({ lruConfig = {}, genCacheKeyStrate } = {}) {
+  // 默认10分钟缓存
+  const {
+    maxAge = 1000 * 60 * 10,
+    ...restConfig
+  } = lruConfig || {}
+
+  const lruCache = new LRU({
+    maxAge,
+    ...restConfig,
+  })
+
+  function getCacheKey(context) {
+    return genCacheKeyStrate ? genCacheKeyStrate(context) : DEFAULT_CACHE_KEY
+  }
+
+  function cache(fn) {
+    // 服务端不能保留缓存 会在多个用户之间共享
+    if (isServer) {
+      return fn
+    }
+
+    return async (...args) => {
+      const key = getCacheKey(...args)
+      const cached = lruCache.get(key)
+      if (cached) {
+        return cached
+      }
+      const result = await fn(...args)
+      lruCache.set(key, result)
+      return result
+    }
+  }
+
+  function setCache(key, cachedData) {
+    lruCache.set(key, cachedData)
+  }
+
+  // 允许客户端外部手动设置缓存数据
+  function useCache(key, cachedData) {
+    useEffect(() => {
+      if (!isServer) {
+        setCache(key, cachedData)
+      }
+    }, [])
+  }
+
+  return {
+    cache,
+    useCache,
+    setCache,
+  }
+}
+```
+
+使用示例：
+```
+/**
+*  使用示例
+*  关键点在于cache和useCache的使用
+**/
+
+import { Button, Icon, Tabs } from 'antd'
+import getConfig from 'next/config'
+import Router, { withRouter } from 'next/router'
+import { useSelector } from 'react-redux'
+import { request } from '../lib/api'
+import initCache from '../lib/client-cache'
+import Repo from '../components/Repo'
+
+const { publicRuntimeConfig } = getConfig()
+
+const { cache, useCache } = initCache()
+
+const Index = ({ userRepos, starred, router }) => {
+  useCache('cache', {
+    userRepos,
+    starred,
+  })
+  
+  return (
+    <div className="root">
+      <div className="user-repos">
+            {userRepos.map((repo) => (
+              <Repo key={repo.id} repo={repo} />
+            ))}
+      </div>
+    </div>
+  )
+}
+
+Index.getInitialProps = cache(async ({ ctx, reduxStore }) => {
+  const { user } = reduxStore.getState()
+  if (!user || !user.id) {
+    return {}
+  }
+
+  const { data: userRepos } = await request(
+    {
+      url: '/user/repos',
+    },
+    ctx.req,
+    ctx.res,
+  )
+
+  const { data: starred } = await request(
+    {
+      url: '/user/starred',
+    },
+    ctx.req,
+    ctx.res,
+  )
+  return {
+    userRepos,
+    starred,
+  }
+})
+
+export default withRouter(Index)
+```
+原理就是去LRU缓存中找有没有这个key的缓存值，key的生成策略可以自定义，比如在搜索页面就可以根据query中各个参数的值拼接成类似于`ssh-nextgithub`这样的key，下次再去搜索用户名为`ssh`下的`nextgithub`这个项目的时候，就会直接返回缓存中的结果。  
+
+之所以要使用useCache，是因为首先这个缓存并不会在服务端执行，但是初次打开页面getInitialProps会在服务端执行结果。
+客户端渲染组件的时候能通过服务端在window注入的值拿到这个返回值，但是这个时候缓存中是没有这个值的。
+所以我们要手动利用useCache设置一下缓存值，这样下次进行客户端跳转的时候就可以利用服务端渲染时执行的getInitialProps的返回值了。
