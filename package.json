@@ -29,7 +29,7 @@
     "koa-session": "^5.12.3",
     "lodash": "^4.17.15",
     "lru-cache": "^5.1.1",
-    "markdown-it": "^9.1.0",
+    "markdown-it": "^12.3.2",
     "moment": "^2.24.0",
     "next": "9.0.3",
     "react": "16.9.0",
