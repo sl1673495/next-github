@@ -30,7 +30,7 @@
     "lodash": "^4.17.15",
     "lru-cache": "^5.1.1",
     "markdown-it": "^9.1.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "next": "9.0.3",
     "react": "16.9.0",
     "react-dom": "16.9.0",
